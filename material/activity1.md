@@ -266,11 +266,9 @@ print("specifically developed to effectively process spatial data and achieve mu
 print("better performance on image recognition tasks.")
 ```
 
-**Step 10: Discussion
+**Step 10: Discussion**
 
 Reflect on the steps performed in this lab and discuss the following questions with your group. You can use the Part 1 Summary document and Large Language Models (LLMs) to help explore concepts further, but try to formulate your own understanding first.
-
-**Questions:**
 
 1.  What are the key differences between the MNIST and CIFAR-10 datasets used in this lab (consider image size, color channels, and content complexity)?
 2.  Why was **normalization** (dividing pixel values by 255.0) applied to both datasets in Step 4? What issue might arise if we didn't normalize? (Refer to **Summary Sec 3.2**)
