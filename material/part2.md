@@ -129,7 +129,7 @@ The filter used in the animation is size `3x3` applied to an input of size `5x5`
 This code applies a 3x3 vertical edge detection filter to a 5x5 single-channel input, producing a 3x3 feature map.
 
 <details>
-<summary>Setup (Loading a Real Image)</summary>
+<summary>Step 1/9: Setup (Loading a Real Image)</summary>
 
 Let's load a real image from the web. We'll use a picture of a Pigeon. We will load it, convert it to RGB (just in case it's RGBA or other), resize it slightly for faster processing, and also create a grayscale version for single-channel demonstrations.
 
@@ -214,7 +214,7 @@ filter_sharpen = np.array([
 </details>
 
 <details>
-<summary>How Features are Detected (Convolution with one filter on Real Image)</summary>
+<summary>Step 2/9: How Features are Detected (Convolution with one filter on Real Image)</summary>
 
 ```python
 # Cell 2: How Features are Detected (Convolution with one filter on Real Image)
@@ -315,6 +315,7 @@ The `3x3` filter applied to the `5x5` input with `stride=2` results in a `2x2` f
 **Code Example: Strided Convolution**
 
 This code demonstrates convolution with `stride=3`.
+
 ```python
 # Cell 3: Striding on Real Image
 
