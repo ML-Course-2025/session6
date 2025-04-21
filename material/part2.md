@@ -83,7 +83,7 @@ For example, you can upload [an image](./img/apple.jpg) to a site like [Online I
 
 Before diving into the mechanics of CNNs, it's helpful to understand their inspiration: the human visual system. Our brains don't process an entire scene instantly. Instead, visual information travels through different areas of the brain, particularly the visual cortex located in the occipital lobe, processing features in a hierarchical manner.
 
-<img src="./img/v1.png" alt="Abstract illustration of visual areas in the human brain, showing Primary visual cortex (V1), V2, V3, and higher areas like Posterior parietal cortex and Inferior temporal cortex." width=auto>
+<img src="./img/v1.png" alt="Abstract illustration of visual areas in the human brain, showing Primary visual cortex (V1), V2, V3, and higher areas like Posterior parietal cortex and Inferior temporal cortex." width="50%">
 *(Image source: Perkins School for the Blind, Adapted from Banich and Compton (2018))*
 
 As shown in the illustration above:
@@ -122,11 +122,140 @@ For simplicity, the following animation shows how an edge detector filter might 
 
 The filter used in the animation is size `3x3` applied to an input of size `5x5`. The resulting feature map is size `3x3`. In summary, for an input image of size `n x n` and a filter of size `m x m` (with stride 1, no padding), the resulting output is of size `(n - m + 1) x (n - m + 1)`.
 
+
+***
+**Setup: Loading a Real Image**
+
+Instead of using manually created arrays, let's load a real image from the web. We'll use a picture of a bicycle. We will load it, convert it to RGB (just in case it's RGBA or other), resize it slightly for faster processing, and also create a grayscale version for single-channel demonstrations.
+
+```python
+# Cell 1.5: Setup - Load and Prepare a Real Image
+import numpy as np
+import matplotlib.pyplot as plt
+from PIL import Image
+import requests
+from io import BytesIO
+from scipy.signal import convolve2d
+
+# --- Image Loading ---
+try:
+    # Example image URL (Wikimedia Commons - Bicycle) - Check license if using elsewhere!
+    image_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Left_side_of_Flying_Pigeon.jpg/640px-Left_side_of_Flying_Pigeon.jpg" # Option 1
+    # image_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Dubrovnik_street_with_bicycle.jpg/640px-Dubrovnik_street_with_bicycle.jpg" # Option 2 (more texture/background)
+
+    response = requests.get(image_url)
+    response.raise_for_status() # Raise an exception for bad status codes
+    img_pil = Image.open(BytesIO(response.content)).convert('RGB')
+
+    # Resize for faster processing (optional, maintains aspect ratio)
+    img_pil.thumbnail((256, 256)) # Max size 256x256
+
+    # Convert to NumPy arrays
+    img_rgb = np.array(img_pil).astype(np.float32) / 255.0 # Normalize to 0.0-1.0
+    img_gray = np.array(img_pil.convert('L')).astype(np.float32) / 255.0 # Grayscale version, normalized
+
+    print(f"Image loaded successfully.")
+    print(f"Original Color Image Shape (H, W, C): {img_rgb.shape}")
+    print(f"Grayscale Image Shape (H, W): {img_gray.shape}")
+
+    # Display loaded images
+    plt.figure(figsize=(8, 4))
+    plt.subplot(1, 2, 1)
+    plt.imshow(img_rgb)
+    plt.title("Original Color Image")
+    plt.axis('off')
+    plt.subplot(1, 2, 2)
+    plt.imshow(img_gray, cmap='gray')
+    plt.title("Grayscale Version")
+    plt.axis('off')
+    plt.tight_layout()
+    plt.show()
+
+except requests.exceptions.RequestException as e:
+    print(f"Error loading image from URL: {e}")
+    # Use placeholder arrays if image loading fails
+    img_rgb = np.random.rand(100, 100, 3)
+    img_gray = np.random.rand(100, 100)
+    print("Using random noise array as fallback.")
+except Exception as e:
+     print(f"An error occurred: {e}")
+     img_rgb = np.random.rand(100, 100, 3)
+     img_gray = np.random.rand(100, 100)
+     print("Using random noise array as fallback.")
+
+
+# --- Define Filters (We'll reuse these) ---
+# Vertical Edge Detection
+filter_vertical = np.array([
+    [ 1, 0, -1],
+    [ 2, 0, -2],
+    [ 1, 0, -1]
+], dtype=np.float32)
+
+# Horizontal Edge Detection
+filter_horizontal = np.array([
+    [ 1,  2,  1],
+    [ 0,  0,  0],
+    [-1, -2, -1]
+], dtype=np.float32)
+
+# Sharpen Filter
+filter_sharpen = np.array([
+    [ 0, -1,  0],
+    [-1,  5, -1],
+    [ 0, -1,  0]
+], dtype=np.float32)
+```
+
 ***
 **Code Example: Feature Detection (Single Filter Convolution)**
 
 This code applies a 3x3 vertical edge detection filter to a 5x5 single-channel input, producing a 3x3 feature map.
 
+
+```python
+# Cell 2: How Features are Detected (Convolution with one filter on Real Image)
+
+# Check if image loading was successful
+if 'img_gray' not in globals():
+    print("Grayscale image not loaded. Please run the setup cell first.")
+else:
+    # Use the grayscale image and the vertical edge filter
+    input_image = img_gray
+    filter_kernel = filter_vertical
+
+    print("Input Image Shape:", input_image.shape)
+    print("Filter Kernel Shape:", filter_kernel.shape)
+
+    # Apply convolution (mode='valid' means no padding)
+    # Flip kernel for strict convolution definition
+    feature_map = convolve2d(input_image, np.flipud(np.fliplr(filter_kernel)), mode='valid')
+    output_shape = feature_map.shape
+    print(f"Feature Map Shape: {output_shape}")
+
+    # Display
+    plt.figure(figsize=(12, 4))
+    plt.subplot(1, 3, 1)
+    plt.imshow(input_image, cmap='gray')
+    plt.title(f'Input Grayscale ({input_image.shape[0]}x{input_image.shape[1]})')
+    plt.axis('off')
+
+    plt.subplot(1, 3, 2)
+    plt.imshow(filter_kernel, cmap='coolwarm')
+    plt.title(f'Filter Kernel ({filter_kernel.shape[0]}x{filter_kernel.shape[1]})')
+    plt.axis('off')
+
+    plt.subplot(1, 3, 3)
+    # Display absolute value or clip for better visualization of edges
+    plt.imshow(np.abs(feature_map), cmap='gray')
+    plt.title(f'Feature Map ({output_shape[0]}x{output_shape[1]})\n(Vertical Edges Enhanced)')
+    plt.axis('off')
+
+    plt.tight_layout()
+    plt.show()
+```
+
+<!-- 
 ```python
 # Cell 2: How Features are Detected (Convolution with one filter)
 from scipy.signal import convolve2d # Use SciPy for a standard convolution function
@@ -155,7 +284,7 @@ axs[0].imshow(input_image, cmap='gray', vmin=0, vmax=255); axs[0].set_title('Inp
 axs[1].imshow(filter_kernel, cmap='coolwarm', vmin=-4, vmax=4); axs[1].set_title('Filter Kernel (3x3)'); axs[1].axis('off')
 axs[2].imshow(feature_map, cmap='gray'); axs[2].set_title(f'Feature Map ({feature_map.shape[0]}x{feature_map.shape[1]})'); axs[2].axis('off')
 plt.tight_layout(); plt.show()
-```
+``` -->
 
 **Other Examples:**
 
@@ -181,8 +310,61 @@ The `3x3` filter applied to the `5x5` input with `stride=2` results in a `2x2` f
 ***
 **Code Example: Strided Convolution**
 
-This code demonstrates convolution with `stride=2`.
+This code demonstrates convolution with `stride=3`.
+```python
+# Cell 3: Striding on Real Image
 
+# Check if image loading was successful
+if 'img_gray' not in globals():
+    print("Grayscale image not loaded. Please run the setup cell first.")
+else:
+    # Use grayscale image and horizontal edge filter this time
+    input_image = img_gray
+    filter_kernel = filter_horizontal # Let's use the horizontal one here
+
+    # Manual convolution calculation with stride = 3 (more noticeable reduction)
+    stride = 3
+    input_h, input_w = input_image.shape
+    filter_h, filter_w = filter_kernel.shape
+    # Calculate output dimensions
+    output_h = int(np.floor((input_h - filter_h) / stride)) + 1
+    output_w = int(np.floor((input_w - filter_w) / stride)) + 1
+    feature_map_strided = np.zeros((output_h, output_w), dtype=np.float32)
+
+    # Perform the convolution manually stepping by 'stride'
+    for i in range(output_h):
+        for j in range(output_w):
+            start_row, start_col = i * stride, j * stride
+            patch = input_image[start_row : start_row + filter_h, start_col : start_col + filter_w]
+            # Ensure patch dimensions match filter if near edge with stride
+            if patch.shape == filter_kernel.shape:
+                 feature_map_strided[i, j] = np.sum(patch * filter_kernel)
+
+    print(f"Input Shape: {input_image.shape}, Filter Shape: {filter_kernel.shape}")
+    print(f"Output Feature Map with Stride={stride} Shape: ({output_h}x{output_w})")
+
+    # Display
+    plt.figure(figsize=(12, 4))
+    plt.subplot(1, 3, 1)
+    plt.imshow(input_image, cmap='gray')
+    plt.title(f'Input Grayscale ({input_image.shape[0]}x{input_image.shape[1]})')
+    plt.axis('off')
+
+    plt.subplot(1, 3, 2)
+    plt.imshow(filter_kernel, cmap='coolwarm')
+    plt.title(f'Filter Kernel ({filter_kernel.shape[0]}x{filter_kernel.shape[1]})')
+    plt.axis('off')
+
+    plt.subplot(1, 3, 3)
+    plt.imshow(np.abs(feature_map_strided), cmap='gray')
+    plt.title(f'Feature Map (Stride={stride}, {output_h}x{output_w})\n(Horizontal Edges)')
+    plt.axis('off')
+
+    plt.tight_layout()
+    plt.show()
+```
+
+<!-- 
 ```python
 # Cell 3: Striding
 # Re-use input and filter from previous example
@@ -215,7 +397,7 @@ axs[0].imshow(input_image, cmap='gray', vmin=0, vmax=255); axs[0].set_title('Inp
 axs[1].imshow(filter_kernel, cmap='coolwarm', vmin=-4, vmax=4); axs[1].set_title('Filter Kernel (3x3)'); axs[1].axis('off')
 axs[2].imshow(feature_map_strided, cmap='gray'); axs[2].set_title(f'Feature Map (Stride={stride}, {output_h}x{output_w})'); axs[2].axis('off')
 plt.tight_layout(); plt.show()
-```
+``` -->
 ***
 
 ### Padding
@@ -238,6 +420,52 @@ With one layer of padding (`p=1`), the `5x5` input becomes `7x7`. Applying a `3x
 
 This code adds `padding=1` before convolution to maintain the output size.
 
+```python
+# Cell 4: Padding on Real Image
+
+# Check if image loading was successful
+if 'img_gray' not in globals():
+    print("Grayscale image not loaded. Please run the setup cell first.")
+else:
+    # Use grayscale image and the sharpen filter
+    input_image = img_gray
+    filter_kernel = filter_sharpen
+
+    # Add padding (p=1 layer of zeros)
+    padding = 1
+    padded_image = np.pad(input_image, pad_width=((padding, padding), (padding, padding)), mode='constant', constant_values=0)
+
+    print(f"Original Input Shape: {input_image.shape}")
+    print(f"Padded Image Shape: {padded_image.shape}")
+
+    # Apply convolution (stride=1) to the *padded* image using 'valid' mode
+    feature_map_padded = convolve2d(padded_image, np.flipud(np.fliplr(filter_kernel)), mode='valid')
+    output_shape = feature_map_padded.shape
+    print(f"Output Feature Map Shape after Padding: {output_shape}")
+    # Note: Output size = (Input_Padded - Filter + 1) should be same as Original Input
+
+    # Display
+    plt.figure(figsize=(12, 4))
+    plt.subplot(1, 3, 1)
+    plt.imshow(padded_image, cmap='gray')
+    plt.title(f'Padded Input ({padded_image.shape[0]}x{padded_image.shape[1]})')
+    plt.axis('off')
+
+    plt.subplot(1, 3, 2)
+    plt.imshow(filter_kernel, cmap='coolwarm', vmin=-1.1, vmax=5.1) # Adjust vmin/vmax for sharpen filter
+    plt.title(f'Filter Kernel ({filter_kernel.shape[0]}x{filter_kernel.shape[1]})')
+    plt.axis('off')
+
+    plt.subplot(1, 3, 3)
+    # Clip values to 0-1 range for display after sharpening
+    plt.imshow(np.clip(feature_map_padded, 0, 1), cmap='gray')
+    plt.title(f'Feature Map ({output_shape[0]}x{output_shape[1]})\n(Sharpened)')
+    plt.axis('off')
+
+    plt.tight_layout()
+    plt.show()
+```
+<!-- 
 ```python
 # Cell 4: Padding
 # Re-use input and filter
@@ -266,7 +494,8 @@ axs[0].imshow(padded_image, cmap='gray', vmin=0, vmax=255); axs[0].set_title(f'P
 axs[1].imshow(filter_kernel, cmap='coolwarm', vmin=-4, vmax=4); axs[1].set_title('Filter Kernel (3x3)'); axs[1].axis('off')
 axs[2].imshow(feature_map_padded, cmap='gray'); axs[2].set_title(f'Feature Map ({feature_map_padded.shape[0]}x{feature_map_padded.shape[1]})'); axs[2].axis('off')
 plt.tight_layout(); plt.show()
-```
+``` 
+-->
 ***
 
 ### How Convolutions Apply over RGB Channels
@@ -285,6 +514,63 @@ For a `5x5` image represented over 3 channels (`5x5x3` array), a `3x3` filter (r
 
 This code applies one 3x3x3 filter to a 5x5x3 input, producing a single 3x3 feature map (using stride=1 and 'valid'/no padding for simplicity).
 
+```python
+# Cell 5: How Convolutions are Applied over RGB Channels (Real Image)
+
+# Check if image loading was successful
+if 'img_rgb' not in globals():
+    print("Color image not loaded. Please run the setup cell first.")
+else:
+    # Use the COLOR image (H, W, C)
+    input_rgb = img_rgb
+
+    # Create a 3x3x3 filter - e.g., detect vertical edges strongly in Red, ignore Green, weakly in Blue
+    filter_rgb_single = np.zeros((3, 3, 3), dtype=np.float32)
+    filter_rgb_single[:, :, 0] = filter_vertical # Strong vertical edge in Red (Ch 0)
+    filter_rgb_single[:, :, 1] = 0               # Ignore Green (Ch 1)
+    filter_rgb_single[:, :, 2] = filter_vertical * 0.5 # Weak vertical edge in Blue (Ch 2)
+
+    print("Input RGB Image Shape (H, W, C):", input_rgb.shape)
+    print("Filter RGB Shape (H, W, C):", filter_rgb_single.shape)
+
+    # Manual convolution (stride=1, no padding)
+    stride = 1
+    input_h, input_w, input_c = input_rgb.shape
+    filter_h, filter_w, filter_c = filter_rgb_single.shape
+    output_h = ((input_h - filter_h) // stride) + 1
+    output_w = ((input_w - filter_w) // stride) + 1
+    feature_map_rgb_combined = np.zeros((output_h, output_w), dtype=np.float32)
+
+    for i in range(output_h):
+        for j in range(output_w):
+            patch = input_rgb[i*stride : i*stride + filter_h, j*stride : j*stride + filter_w, :]
+            if patch.shape == filter_rgb_single.shape:
+                activation = np.sum(patch * filter_rgb_single) # Sum over all H*W*C elements
+                feature_map_rgb_combined[i, j] = activation
+
+    print(f"Combined Feature Map Shape (Output is 2D): {feature_map_rgb_combined.shape}")
+
+    # Display (Input R channel, Filter R channel, combined output map)
+    plt.figure(figsize=(12, 4))
+    plt.subplot(1, 3, 1)
+    plt.imshow(input_rgb[:,:,0], cmap='Reds_r') # Show R channel of input
+    plt.title('Input (Red Ch.)')
+    plt.axis('off')
+
+    plt.subplot(1, 3, 2)
+    plt.imshow(filter_rgb_single[:,:,0], cmap='coolwarm') # Show R channel of filter
+    plt.title('Filter (Red Ch.)')
+    plt.axis('off')
+
+    plt.subplot(1, 3, 3)
+    plt.imshow(np.abs(feature_map_rgb_combined), cmap='gray') # Show absolute value
+    plt.title(f'Combined Output Map ({output_h}x{output_w})\n(Color Filter Applied)')
+    plt.axis('off')
+
+    plt.tight_layout()
+    plt.show()
+```
+<!-- 
 ```python
 # Cell 5: How Convolutions are Applied over RGB Channels
 # Simulate a 5x5x3 RGB input image
@@ -324,7 +610,8 @@ axs[0].imshow(input_rgb[:,:,0], cmap='gray', vmin=0, vmax=255); axs[0].set_title
 axs[1].imshow(filter_rgb[:,:,0], cmap='coolwarm', vmin=-4, vmax=4); axs[1].set_title('Filter (R Ch.)'); axs[1].axis('off')
 axs[2].imshow(feature_map_rgb_combined, cmap='gray'); axs[2].set_title(f'Combined Output Map ({output_h}x{output_w})'); axs[2].axis('off')
 plt.tight_layout(); plt.show()
-```
+``` 
+-->
 ***
 
 ### How Convolutions Apply with More Than One Filter
@@ -343,6 +630,69 @@ The image shows applying three different filters to the RGB input. Each filter p
 
 This code applies two different 3x3x3 filters to the 5x5x3 input, resulting in a 3x3x2 output volume (using stride=1, 'valid'/no padding).
 
+```python
+# Cell 6: How Convolutions are Applied with More Than One Filter (Real Image)
+
+# Check if image loading was successful
+if 'img_rgb' not in globals():
+    print("Color image not loaded. Please run the setup cell first.")
+else:
+    # Use the COLOR image
+    input_rgb = img_rgb
+
+    # Define TWO different 3x3x3 filters
+    # Filter 1: Vertical Edge detector (strong on Red, weak on Blue)
+    filter_1_rgb = np.zeros((3, 3, 3), dtype=np.float32)
+    filter_1_rgb[:, :, 0] = filter_vertical * 1.0
+    filter_1_rgb[:, :, 2] = filter_vertical * 0.5
+
+    # Filter 2: Horizontal Edge detector (strong on Green)
+    filter_2_rgb = np.zeros((3, 3, 3), dtype=np.float32)
+    filter_2_rgb[:, :, 1] = filter_horizontal * 1.0
+
+    filters_list = [filter_1_rgb, filter_2_rgb]
+    num_filters = len(filters_list)
+
+    print("Input RGB Image Shape (H, W, C):", input_rgb.shape)
+    print("Number of Filters:", num_filters)
+
+    # Apply each filter (stride=1, no padding)
+    stride = 1
+    input_h, input_w, input_c = input_rgb.shape
+    filter_h, filter_w, filter_c = filters_list[0].shape
+    output_h = ((input_h - filter_h) // stride) + 1
+    output_w = ((input_w - filter_w) // stride) + 1
+    # Output will have shape (H, W, NumFilters)
+    output_feature_maps = np.zeros((output_h, output_w, num_filters), dtype=np.float32)
+
+    for f_idx, current_filter in enumerate(filters_list):
+        for i in range(output_h):
+            for j in range(output_w):
+                patch = input_rgb[i*stride : i*stride + filter_h, j*stride : j*stride + filter_w, :]
+                if patch.shape == current_filter.shape:
+                     activation = np.sum(patch * current_filter)
+                     output_feature_maps[i, j, f_idx] = activation
+
+    print(f"Stacked Output Feature Maps Shape (H, W, NumFilters): {output_feature_maps.shape}")
+
+    # Display the input R channel and the two resulting feature maps
+    plt.figure(figsize=(12, 4))
+    plt.subplot(1, 1 + num_filters, 1)
+    plt.imshow(input_rgb[:,:,0], cmap='Reds_r') # Show R channel of input
+    plt.title('Input (Red Ch.)')
+    plt.axis('off')
+
+    # Display each feature map
+    for f_idx in range(num_filters):
+        plt.subplot(1, 1 + num_filters, f_idx + 2)
+        plt.imshow(np.abs(output_feature_maps[:, :, f_idx]), cmap='gray')
+        plt.title(f'Output Map {f_idx+1}')
+        plt.axis('off')
+
+    plt.tight_layout()
+    plt.show()
+```
+<!-- 
 ```python
 # Cell 6: How Convolutions are Applied with More Than One Filter
 # Use the same 5x5x3 RGB input image
@@ -380,7 +730,8 @@ axs[0].imshow(input_rgb[:,:,0], cmap='gray', vmin=0, vmax=255); axs[0].set_title
 for f_idx in range(num_filters):
     axs[f_idx+1].imshow(output_feature_maps[:, :, f_idx], cmap='gray'); axs[f_idx+1].set_title(f'Output Map {f_idx+1}'); axs[f_idx+1].axis('off')
 plt.tight_layout(); plt.show()
-```
+``` 
+-->
 ***
 
 ## 3. Pooling Layers
@@ -487,7 +838,7 @@ plt.figure(figsize=(8, 3))
 plt.subplot(1, 2, 1); plt.imshow(pooled_output_multi_filter[:, :, 0], cmap='gray'); plt.title(f'Pre-Flatten (Slice 0)\nShape {pooled_output_multi_filter.shape}'); plt.axis('off')
 for r in range(2):
     for c in range(2): plt.text(c, r, f'{pooled_output_multi_filter[r, c, 0]:.0f}', ha='center', va='center', color='white')
-plt.subplot(1, 2, 2); plt.stem(flattened_vector, use_line_collection=True); plt.title(f'Flattened Vector\nShape {flattened_vector.shape}')
+plt.subplot(1, 2, 2); plt.stem(flattened_vector); plt.title(f'Flattened Vector\nShape {flattened_vector.shape}')
 plt.xticks(np.arange(len(flattened_vector))); plt.grid(True, axis='y'); plt.xlabel('Index'); plt.ylabel('Value')
 plt.tight_layout(); plt.show()
 ```
