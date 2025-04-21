@@ -1,4 +1,4 @@
-# Homework: Project Refinement & Consolidation
+# Homework: Project Refinement
 
 > [!IMPORTANT]  
 > - **Due Date:** [2025-05-06]

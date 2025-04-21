@@ -80,7 +80,15 @@
 - [Inspiration from the Brain: Hierarchical Vision](https://www.perkins.org/higher-order-visual-pathways-and-the-cvi-brain/)
 - [Introduction to convolutional neural networks](https://developer.ibm.com/articles/introduction-to-convolutional-neural-networks/?mhsrc=ibmsearch_a&mhq=convolutional%20neural%20networks%26quest%3B)
 - [How do convolutional neural networks work?](https://www.ibm.com/topics/convolutional-neural-networks)
- 
+- Classification datasets
+  - [CIFAR100 small images classification dataset](https://keras.io/api/datasets/cifar100/)
+  - [Fashion MNIST dataset, an alternative to MNIST](https://keras.io/api/datasets/fashion_mnist/)
+  - [The Oxford-IIIT Pet Dataset](https://www.robots.ox.ac.uk/~vgg/data/pets/)
+- [T81-558: Applications of Deep Neural Networks](https://github.com/jeffheaton/t81_558_deep_learning/blob/master/t81_558_class_06_1_python_images.ipynb)
+- [Convolutional Neural Networks (stanford.edu)](https://cs231n.github.io/convolutional-networks/)
+- [CNN Demo](https://colab.research.google.com/github/YData123/sds365-fa24/blob/master/demos/convolution/cnn_mnist_demo.ipynb)
+- [Introduction to Deep Learning with Keras and TensorFlow](https://colab.research.google.com/github/AviatorMoser/keras-mnist-tutorial/blob/master/MNIST%20in%20Keras.ipynb)
+
 <!-- - [Slides](./material/lec_4_part1.ipynb) -->
 </details>
 
