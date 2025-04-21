@@ -84,7 +84,8 @@ For example, you can upload [an image](./img/apple.jpg) to a site like [Online I
 Before diving into the mechanics of CNNs, it's helpful to understand their inspiration: the human visual system. Our brains don't process an entire scene instantly. Instead, visual information travels through different areas of the brain, particularly the visual cortex located in the occipital lobe, processing features in a hierarchical manner.
 
 <img src="./img/v1.png" alt="Abstract illustration of visual areas in the human brain, showing Primary visual cortex (V1), V2, V3, and higher areas like Posterior parietal cortex and Inferior temporal cortex." width="50%">
-*(Image source: Perkins School for the Blind, Adapted from Banich and Compton (2018))*
+
+> Image source: [Perkins School for the Blind, Adapted from Banich and Compton (2018)](https://www.perkins.org/higher-order-visual-pathways-and-the-cvi-brain/)
 
 As shown in the illustration above:
 
@@ -122,11 +123,15 @@ For simplicity, the following animation shows how an edge detector filter might 
 
 The filter used in the animation is size `3x3` applied to an input of size `5x5`. The resulting feature map is size `3x3`. In summary, for an input image of size `n x n` and a filter of size `m x m` (with stride 1, no padding), the resulting output is of size `(n - m + 1) x (n - m + 1)`.
 
-
 ***
-**Setup: Loading a Real Image**
+**Code Example: Feature Detection (Single Filter Convolution)**
 
-Instead of using manually created arrays, let's load a real image from the web. We'll use a picture of a bicycle. We will load it, convert it to RGB (just in case it's RGBA or other), resize it slightly for faster processing, and also create a grayscale version for single-channel demonstrations.
+This code applies a 3x3 vertical edge detection filter to a 5x5 single-channel input, producing a 3x3 feature map.
+
+<details>
+<summary>Setup (Loading a Real Image)</summary>
+
+Let's load a real image from the web. We'll use a picture of a Pigeon. We will load it, convert it to RGB (just in case it's RGBA or other), resize it slightly for faster processing, and also create a grayscale version for single-channel demonstrations.
 
 ```python
 # Cell 1.5: Setup - Load and Prepare a Real Image
@@ -141,7 +146,7 @@ from scipy.signal import convolve2d
 try:
     # Example image URL (Wikimedia Commons - Bicycle) - Check license if using elsewhere!
     image_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Left_side_of_Flying_Pigeon.jpg/640px-Left_side_of_Flying_Pigeon.jpg" # Option 1
-    # image_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Dubrovnik_street_with_bicycle.jpg/640px-Dubrovnik_street_with_bicycle.jpg" # Option 2 (more texture/background)
+    # image_url = "https://raw.githubusercontent.com/ML-Course-2025/session6/refs/heads/main/material/img/640px-Left_side_of_Flying_Pigeon.jpg" # Option 2
 
     response = requests.get(image_url)
     response.raise_for_status() # Raise an exception for bad status codes
@@ -206,12 +211,10 @@ filter_sharpen = np.array([
     [ 0, -1,  0]
 ], dtype=np.float32)
 ```
+</details>
 
-***
-**Code Example: Feature Detection (Single Filter Convolution)**
-
-This code applies a 3x3 vertical edge detection filter to a 5x5 single-channel input, producing a 3x3 feature map.
-
+<details>
+<summary>How Features are Detected (Convolution with one filter on Real Image)</summary>
 
 ```python
 # Cell 2: How Features are Detected (Convolution with one filter on Real Image)
@@ -254,6 +257,7 @@ else:
     plt.tight_layout()
     plt.show()
 ```
+</details>
 
 <!-- 
 ```python
