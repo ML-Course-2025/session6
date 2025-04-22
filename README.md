@@ -31,8 +31,7 @@
 #### Part 0: Review
 
 - [Where are we now?](./material/part0.md)
-- [Group presentations](./material/src/random.py)
-  - Gr2 (Gr6?, Gr10?)
+- Group presentations: (Gr6?, Gr10?)
 
 ---
 

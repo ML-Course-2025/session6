@@ -115,7 +115,7 @@ Activation functions introduce **non-linearity** into the network. This is cruci
     *   *Function:* `f(x) = 1 / (1 + exp(-x))` (S-shaped curve).
     *   *Use Case:* Primarily used in the **output layer for binary classification tasks**. Outputs a probability between 0 and 1. Less common in hidden layers now due to potential for vanishing gradients.
     *   *Output Range:* (0, 1)
-    * <img src="./img/sigmoid" width="50%">
+    * <img src="./img/sigmoid.png" width="50%">
 *   **Softmax:**
     *   *Function:* Converts a vector of raw scores (logits) into a probability distribution (all output values are between 0 and 1 and sum to 1).
     *   *Use Case:* Used in the **output layer for multi-class classification tasks**. Each neuron's output represents the calculated probability for a specific class.
