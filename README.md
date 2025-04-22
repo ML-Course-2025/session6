@@ -1,4 +1,4 @@
-# Session 3: Supervised Learning
+# Session 6: Convolutional Neural Networks (CNNs)
 
 
 > [!IMPORTANT] 

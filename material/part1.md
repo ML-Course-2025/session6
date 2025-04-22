@@ -106,6 +106,7 @@ Activation functions introduce **non-linearity** into the network. This is cruci
     *   *Function:* `f(x) = max(0, x)` (Outputs the input if positive, zero otherwise).
     *   *Use Case:* The most common choice for **hidden layers**. It is computationally efficient and helps mitigate the **vanishing gradient problem** (a situation in deep networks where the signals used to update the weights in early layers become extremely small, effectively stopping learning).
     *   *Output Range:* \[0, ∞)
+    * <img src="./img/relu.png" width="50%">
 *   **Linear (or 'None'):**
     *   *Function:* `f(x) = x` (Outputs the input directly).
     *   *Use Case:* Typically used in the **output layer for regression tasks**, where the prediction can be any continuous value.
@@ -114,6 +115,7 @@ Activation functions introduce **non-linearity** into the network. This is cruci
     *   *Function:* `f(x) = 1 / (1 + exp(-x))` (S-shaped curve).
     *   *Use Case:* Primarily used in the **output layer for binary classification tasks**. Outputs a probability between 0 and 1. Less common in hidden layers now due to potential for vanishing gradients.
     *   *Output Range:* (0, 1)
+    * <img src="./img/sigmoid" width="50%">
 *   **Softmax:**
     *   *Function:* Converts a vector of raw scores (logits) into a probability distribution (all output values are between 0 and 1 and sum to 1).
     *   *Use Case:* Used in the **output layer for multi-class classification tasks**. Each neuron's output represents the calculated probability for a specific class.
@@ -122,6 +124,13 @@ Activation functions introduce **non-linearity** into the network. This is cruci
     *   *Function:* `f(x) = tanh(x)` (Similar S-shape to sigmoid, but output centered around zero).
     *   *Use Case:* Sometimes used in hidden layers, especially in recurrent networks.
     *   *Output Range:* (-1, 1)
+    * <img src="./img/tanh.png" width="50%">
+
+
+
+
+
+
 
 **2.6 Parameters vs. Hyperparameters**
 
@@ -134,7 +143,7 @@ Understanding this distinction is fundamental to working with neural networks:
         *   Number of hidden layers
         *   Number of neurons per layer
         *   Choice of activation functions (`relu`, `softmax`, etc.)
-        *   Choice of `optimizer` (e.g., 'adam', 'sgd') - the algorithm that updates parameters.
+        *   Choice of `optimizer` (e.g., 'adam', 'sgd') - the algorithm that updates parameters. (Note: *Backward Pass: Backpropagation (Finding the Blame) + Gradient Descent (Updating the Weights*))
         *   `learning rate` - a crucial hyperparameter within the optimizer that controls the step size taken during parameter updates.
         *   Choice of `loss` function - the function measuring prediction error.
         *   `batch_size` - the number of training samples processed in one iteration before updating parameters.
@@ -181,6 +190,7 @@ Preparing data correctly is crucial for model performance.
 
 *   **Normalization:** Pixel values (0-255) are scaled to the range [0, 1]. This helps the training process converge more stably and quickly, as neural networks often work best with small input values. Dividing by 255.0 achieves this.
 *   **Flattening:** Standard ANNs (using `Dense` layers) expect input as a 1D vector. Although the images are 2D (28x28), we need to reshape them into a 1D array of 784 pixels (28 * 28 = 784). This reshaping will be performed by the first layer in our Keras model (`Flatten` layer).
+<img src="./img/flattening.gif" width="50%">
 *   **Labels:** The labels (`y_train`, `y_test`) are already integers (0-9), which is the format required by the chosen loss function (`sparse_categorical_crossentropy`).
 
 ```python
@@ -296,7 +306,6 @@ plt.xlabel('Epoch'); plt.ylabel('Accuracy'); plt.legend(); plt.grid(True)
 plt.tight_layout(); plt.show()
 ```
 
-*(Optional image placeholder)*
 <img src="./img/learning-curves.png" width="50%">
 
 
@@ -306,13 +315,13 @@ Analyzing the learning curves helps identify common training problems:
 
 *   **Underfitting:**
     *   *Definition:* The model is too simple to learn the underlying structure of the data. It fails to achieve low error on both the training and validation sets.
-    *   *Symptoms on Plots:* Both training and validation loss remain high. Accuracy remains low for both. Curves may plateau early at poor performance levels.
+    *   *Symptoms on Plots:* Both training and validation loss remain high. Accuracy remains low for both. Curves may plateau (i.e. stall, pause, or halt) early at poor performance levels.
     *   *Possible Causes:* Insufficient model capacity (too few layers/neurons), inadequate training time (too few epochs), features don't contain enough information.
     *   *Remedies:* Increase model capacity, train longer, engineer better features (less relevant for DL), use a more suitable model type.
 
 *   **Overfitting:**
     *   *Definition:* The model learns the training data *too well*, including noise and specific examples that don't generalize. It performs very well on the training set but poorly on new, unseen data (validation set).
-    *   *Symptoms on Plots:* Training loss continues to decrease while validation loss levels off or starts to *increase*. Similarly, training accuracy approaches 100% while validation accuracy plateaus or drops. A noticeable gap appears between the training and validation curves.
+    *   *Symptoms on Plots:* Training loss continues to decrease while validation loss levels off or starts to *increase*. Similarly, training accuracy approaches 100% while validation accuracy plateaus (i.e. stall, pause, or halt) or drops. A noticeable gap appears between the training and validation curves.
     *   *Possible Causes:* Model is too complex for the amount of data available, training for too many epochs, insufficient data diversity.
     *   *Remedies:* Use regularization techniques (like Early Stopping, Dropout), get more training data, use data augmentation, simplify the model.
 
@@ -320,12 +329,13 @@ Analyzing the learning curves helps identify common training problems:
     *   *Definition:* The model learns the underlying patterns well and generalizes successfully to unseen data.
     *   *Symptoms on Plots:* Both training and validation loss decrease and converge to low values. Both accuracies increase and converge to high values. The gap between training and validation curves is minimal.
 
-*(Optional image placeholder)*
 <img src="./img/Underfitting-overfitting.png" width="50%">
 
 **4.3 Regularization Technique: Early Stopping**
 
 **Regularization** refers to techniques used to prevent overfitting and improve a model's ability to generalize to new data. Early Stopping is a common and effective regularization method.
+
+<img src="./img/Early-Stopping.png" width="50%">
 
 *   **Concept:** Monitor a chosen performance metric on the validation set during training (typically `val_loss`). If this metric stops improving (or starts worsening) for a specified number of consecutive epochs (the `patience` parameter), the training process is halted prematurely. The idea is to stop training around the point where the model starts to overfit. Optionally (`restore_best_weights=True`), the model's parameters can be reverted to the values they had at the epoch with the best observed validation metric.
 
@@ -413,4 +423,5 @@ This reading covered core Deep Learning concepts including libraries (TensorFlow
 
 - [Book: Deep Learning from Scratch, By Seth Weidman](https://metropolia.finna.fi/Record/nelli15.4100000009347178)
 - [Intro to Deep Learning](https://www.kaggle.com/learn/intro-to-deep-learning)
+- [Activation Functions](https://developers.google.com/machine-learning/crash-course/neural-networks/activation-functions)
 

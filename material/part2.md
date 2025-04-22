@@ -131,7 +131,7 @@ This code applies a 3x3 vertical edge detection filter to a 5x5 single-channel i
 <details>
 <summary>Step 1/9: Setup (Loading a Real Image)</summary>
 
-Let's load a real image from the web. We'll use a picture of a Pigeon. We will load it, convert it to RGB (just in case it's RGBA or other), resize it slightly for faster processing, and also create a grayscale version for single-channel demonstrations.
+Let's load a real image from the web. We'll use a picture of a Pigeon. We will load it, convert it to RGB (just in case it's [RGBA](https://www.w3schools.com/Css/css_colors_rgb.asp) or other), resize it slightly for faster processing, and also create a grayscale version for single-channel demonstrations.
 
 ```python
 # Cell 1.5: Setup - Load and Prepare a Real Image
@@ -752,7 +752,7 @@ plt.tight_layout(); plt.show()
 <img src="./img/3b.jpg" alt="" width="50%">
 
 
-The following animation shows Max Pooling with a 2x2 window and stride 2 (implied by non-overlapping movement). For every 2x2 group of cells, the maximum value is selected for the output.
+The following animation shows Max Pooling with a 2x2 window and stride 2 (implied by non-overlapping movement). For every 2x2 group of cells, the maximum value is selected for the output. (Note: *the animation is not quite accurate*)
 
 <!-- ![pooling](./img/pooling.gif) -->
 <img src="./img/pooling.gif" width="50%">
@@ -937,8 +937,8 @@ def create_cnn_model(input_shape=(32, 32, 3), num_classes=10):
         Flatten(),
 
         # First Dense (Fully Connected) Layer: Learns combinations of features
-        # 64 neurons, 'relu' activation. (Note: diagram shows 472, adjust as needed)
-        Dense(64, activation='relu'), # Adjusted from 472 for a more typical small example
+        # 64 neurons, 'relu' activation. 
+        Dense(64, activation='relu'), # Adjusted to a more typical small example
 
         # Output Dense Layer: Produces final classification probabilities
         # 'num_classes' neurons (e.g., 10 for digits 0-9).
@@ -989,6 +989,10 @@ Convolutional Neural Networks provide a powerful framework for image recognition
 
 <img src="./img/Convolution-Max-Pooling-Flatten.jpg" alt="" width=auto>
 
+**Final Note:**
+
+- **CNN (Convolutional Neural Network)** is typically used for **spatial** data, such as images. It’s great for recognizing patterns in **static** data, like textures, shapes, and structures in images or even spatial relationships in other types of structured data.
+- **RNN (Recurrent Neural Network)** is designed for **sequential** data, meaning it processes information **over time**. It’s often used for things like time-series prediction, natural language processing, and speech recognition, where understanding previous steps influences the next ones.
 
 ***
 

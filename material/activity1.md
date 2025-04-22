@@ -251,7 +251,7 @@ print("\nThese challenges motivate the need for architectures specifically desig
 
 **Step 9: Conclusion & Next Steps**
 
-*   Summarize the key finding: standard ANNs, while effective on simple datasets like MNIST, struggle with more complex image data like CIFAR-10 due to their inability to process spatial information efficiently.
+*   Summary of the key finding: standard ANNs, while effective on simple datasets like MNIST, struggle with more complex image data like CIFAR-10 due to their inability to process spatial information efficiently.
 *   This limitation provides the motivation for Part 2, where we will introduce Convolutional Neural Networks (CNNs) as a solution designed to overcome these issues.
 
 ```python
@@ -270,7 +270,7 @@ print("better performance on image recognition tasks.")
 
 Reflect on the steps performed in this lab and discuss the following questions with your group. You can use the Part 1 Summary document and Large Language Models (LLMs) to help explore concepts further, but try to formulate your own understanding first.
 
-1.  What are the key differences between the MNIST and CIFAR-10 datasets used in this lab (consider image size, color channels, and content complexity)?
+1.  What are the key differences between the MNIST and CIFAR-10 datasets used in this lab (consider image size, [color channels](https://en.wikipedia.org/wiki/Channel_(digital_image)), and content complexity)?
 2.  Why was **normalization** (dividing pixel values by 255.0) applied to both datasets in Step 4? What issue might arise if we didn't normalize? (Refer to **Summary Sec 3.2**)
 3.  Explain the purpose of the `layers.Flatten` layer used as the first layer in the `build_ann_model` function (Step 5). Why is it necessary for a standard ANN processing image data? (Refer to **Summary Sec VI**)
 4.  The hidden layer in the ANN used `activation='relu'`. What does the ReLU activation function do, and why is it commonly used in hidden layers? (Refer to **Summary Sec 2.5**)
@@ -291,7 +291,7 @@ Reflect on the steps performed in this lab and discuss the following questions w
 <details>
 <summary>Click for Sample Answers</summary>
 
-1.  **Differences:** MNIST has 28x28 pixel grayscale images (1 channel) of simple, centered digits. CIFAR-10 has 32x32 pixel color images (3 channels) of more complex real-world objects with varied backgrounds and positions. CIFAR-10 is significantly more complex visually.
+1.  **Differences:** MNIST has 28x28 pixel grayscale images (1 channel) of simple, centered digits. CIFAR-10 has 32x32 pixel color images ([3 channels](https://en.wikipedia.org/wiki/Channel_(digital_image)#RGB_images)) of more complex real-world objects with varied backgrounds and positions. CIFAR-10 is significantly more complex visually.
 2.  **Normalization:** It scales pixel values to a smaller range (0 to 1). Neural networks train more effectively and stably with smaller input values, preventing issues where large input values might lead to exploding gradients or slow convergence.
 3.  **Flatten Layer:** It converts the 2D (or 3D for color) image matrix into a 1D vector. Standard `Dense` layers in an ANN expect 1D input, so flattening is necessary to feed the image data into the fully connected network structure.
 4.  **ReLU:** Rectified Linear Unit outputs the input if it's positive (`max(0, x)`) and zero otherwise. It introduces non-linearity efficiently and helps prevent the vanishing gradient problem during training in deep networks.
@@ -309,3 +309,10 @@ Reflect on the steps performed in this lab and discuss the following questions w
 
 </details>
 
+***
+
+**Visualizing RGB Channels with an Online Tool**
+
+To get a better visual intuition of how an image is split into its Red, Green, and Blue components, you can use online tools. These tools often display each channel as a separate grayscale image, where brighter areas indicate higher intensity of that specific color in the original image. This can help solidify the concept of channels representing different color information.
+
+For example, you can upload [an image](./img/apple.jpg) to a site like [Online Image Color Channel Separator](https://onlinetools.com/image/separate-image-color-channels) to see this separation visually.
