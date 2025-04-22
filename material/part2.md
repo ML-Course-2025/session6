@@ -93,6 +93,9 @@ As shown in the illustration above:
 2.  This output is passed to subsequent areas like **V2** and **V3**. Neurons in these areas combine the simple features detected in V1 to recognize more complex shapes, corners, and textures.
 3.  Further processing in higher-level areas (like the Inferior Temporal Cortex, not fully detailed here) combines these shapes to recognize complex objects (like faces, chairs, or the apple from our earlier example).
 
+<img src="./img/2b2.png" alt="" width="50%">
+
+
 **The Connection to CNNs:**
 
 Convolutional Neural Networks are designed to mimic this hierarchical feature learning. The **Convolutional layers** in a CNN act similarly to these stages in the visual cortex:
@@ -291,8 +294,6 @@ plt.tight_layout(); plt.show()
 ``` -->
 
 **Other Examples:**
-
-<img src="./img/2b2.png" alt="" width="50%">
 
 <img src="./img/2c.jpg" alt="" width="50%">
 
