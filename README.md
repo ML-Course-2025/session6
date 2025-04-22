@@ -6,7 +6,7 @@
 > - [Zoom Recordings](https://metropoliafi-my.sharepoint.com/:f:/g/personal/samiben_metropolia_fi/EuSPkRmWcYpGsXdjFhE2k80BaZBR-EeccL7AHlnTQya-6w)
 > - [Homework for this week](./material/homework.md)
 > - The project grade will be based on deliverables ONLY from Phase 1 and Phase 2  ~~Phase 3~~ (total of 260 points).  
-> - The group presentations in Week 8 (Tuesday, May 6, 2025) will be worth an additional 100 points.
+> - The group presentations in Week 8 (Tuesday, May 6, 2025) will be worth 100 points.
 > - There is **no exam** in the Machine Learning part of the course.  
 > - The **attendance list** was uploaded by **Erik** and pertains to the **Cloud** part of the course.
 
@@ -45,7 +45,7 @@
 
 ---
 
-### Part 2: LLMS
+### Part 2:
 
 
 - Convolutional Neural Networks (CNNs)
