@@ -987,7 +987,7 @@ These architectures represent significant milestones and demonstrate how the fun
 
 Convolutional Neural Networks provide a powerful framework for image recognition. By sequentially applying layers for **Convolution** (feature detection), **Pooling** (downsampling), **Flattening** (vectorization), and **Full Connection** (classification), CNNs automatically learn hierarchical visual features directly from data. Understanding these building blocks is key to using and designing CNNs effectively.
 
-<img src="./img/Convolution-Max-Pooling-Flatten.jpg" alt="" width=auto>
+<img src="./img/Convolution-Max-Pooling-Flatten.jpg" alt="" width="50%">
 
 **Final Note:**
 
