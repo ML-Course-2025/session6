@@ -1,34 +1,21 @@
 # Session 3: Supervised Learning
 
 
-> [!NOTE]  
+> [!IMPORTANT] 
 > - [How to share Your Colab Notebook](./material/colab.md)
 > - [Zoom Recordings](https://metropoliafi-my.sharepoint.com/:f:/g/personal/samiben_metropolia_fi/EuSPkRmWcYpGsXdjFhE2k80BaZBR-EeccL7AHlnTQya-6w)
-
-
-> [!IMPORTANT]
->   - The project grade will be based on deliverables from Phase 1 and Phase 2 ONLY ~~ Phase 3~~ (total of 260 points).  
+> [Homework for this week](./material/homework.md)
+>   - The project grade will be based on deliverables ONLY from Phase 1 and Phase 2  ~~Phase 3~~ (total of 260 points).  
 >   - The group presentations in Week 8 (Tuesday, May 6, 2025) will be worth an additional 100 points.
 > - There is **no exam** in the Machine Learning part of the course.  
 > - The **attendance list** was uploaded by **Erik** and pertains to the **Cloud** part of the course.
 
-
-> [!NOTE]  
-> - In week 8, there will be an individual assignment where you will complete a peer assessment for your group members.
 
 ---
 ### Topics
 
 - Deep Learning Fundamentals & Image Classification with ANNs
 - Convolutional Neural Networks (CNNs)
-
------
-
-#### Part 0: Review
-
-- Where are we now?
-- [Group presentations](./material/src/random.py)
-  - Gr2 (Gr6?, Gr10?)
 
 ---
 
@@ -39,18 +26,14 @@
 - Mini lecture
 - Group Activity
 
----
-
-> [!IMPORTANT]  
-> [Homework for this week](./material/homework.md)
-
-
 -----
 
 #### Part 0: Review
 
-- Where are we now?
-- https://excalidraw.com/
+- [Where are we now?](./material/part0.md)
+- [Group presentations](./material/src/random.py)
+  - Gr2 (Gr6?, Gr10?)
+
 ---
 
 ### Part 1: 
@@ -84,10 +67,6 @@
   - [CIFAR100 small images classification dataset](https://keras.io/api/datasets/cifar100/)
   - [Fashion MNIST dataset, an alternative to MNIST](https://keras.io/api/datasets/fashion_mnist/)
   - [The Oxford-IIIT Pet Dataset](https://www.robots.ox.ac.uk/~vgg/data/pets/)
-- [T81-558: Applications of Deep Neural Networks](https://github.com/jeffheaton/t81_558_deep_learning/blob/master/t81_558_class_06_1_python_images.ipynb)
-- [Convolutional Neural Networks (stanford.edu)](https://cs231n.github.io/convolutional-networks/)
-- [CNN Demo](https://colab.research.google.com/github/YData123/sds365-fa24/blob/master/demos/convolution/cnn_mnist_demo.ipynb)
-- [Introduction to Deep Learning with Keras and TensorFlow](https://colab.research.google.com/github/AviatorMoser/keras-mnist-tutorial/blob/master/MNIST%20in%20Keras.ipynb)
 
 <!-- - [Slides](./material/lec_4_part1.ipynb) -->
 </details>
